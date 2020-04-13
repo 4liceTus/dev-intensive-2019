@@ -2,6 +2,7 @@ package ru.skillbranch.devintensive.extensions
 
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.abs
 
 fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"): String {
     val dateFormat = SimpleDateFormat(pattern, Locale("ru"))
@@ -14,12 +15,30 @@ fun Date.add(value: Int, units: TimeUnits = TimeUnits.SECOND): Date {
 }
 
 fun Date.humanizeDiff(date: Date = Date()): String {
-    // TODO
-    return ""
+    val dif = abs(this.time - date.time)
+    val isPast = this.time < date.time
+
+    return when {
+        dif <= TimeUnits.SECOND.value -> "только что"
+        dif <= TimeUnits.SECOND.value * 45 -> getPeriodForm("несколько секунд", isPast)
+        dif <= TimeUnits.SECOND.value * 75 -> getPeriodForm("минуту", isPast)
+        dif <= TimeUnits.MINUTE.value * 45 -> getPeriodForm(TimeUnits.MINUTE.plural((dif / TimeUnits.MINUTE.value).toInt()), isPast)
+        dif <= TimeUnits.MINUTE.value * 75 -> getPeriodForm("час", isPast)
+        dif <= TimeUnits.HOUR.value * 22 -> getPeriodForm(TimeUnits.HOUR.plural((dif / TimeUnits.HOUR.value).toInt()), isPast)
+        dif <= TimeUnits.HOUR.value * 26 -> getPeriodForm("день", isPast)
+        dif <= TimeUnits.DAY.value * 360 -> getPeriodForm(TimeUnits.DAY.plural((dif / TimeUnits.DAY.value).toInt()), isPast)
+        else -> if(isPast) "более года назад" else "более чем через год"
+    }
+}
+
+fun getPeriodForm(interval: String, isPast: Boolean): String {
+    val prefix = if (isPast) "" else "через"
+    val postfix = if (isPast) "назад" else ""
+    return "$prefix $interval $postfix".trim()
 }
 
 fun getPluralForm(amount: Int, units: TimeUnits): String {
-    return when(val valueAmount = kotlin.math.abs(amount) % 100) {
+    return when(val valueAmount = abs(amount) % 100) {
         1 -> Plurals.ONE.get(units)
         in 2..4 -> Plurals.FEW.get(units)
         0, in 5..19 -> Plurals.MANY.get(units)

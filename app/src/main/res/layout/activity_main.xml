@@ -23,7 +23,7 @@
         android:id="@+id/iv_bender"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:src="@drawable/ic_send_black_24dp"
+        android:src="@drawable/bender_dance"
         android:layout_weight="1"/>
 
     <LinearLayout

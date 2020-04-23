@@ -61,10 +61,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onDestroy()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
+    override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState.putString("STATUS", benderObj.status.name)
-        outState.putString("QUESTION", benderObj.question.name)
+        outState?.putString("STATUS", benderObj.status.name)
+        outState?.putString("QUESTION", benderObj.question.name)
     }
 
     override fun onClick(v: View?) {

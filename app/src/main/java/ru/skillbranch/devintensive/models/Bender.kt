@@ -4,24 +4,28 @@ import android.graphics.Color
 
 class Bender(var status: Status = Status.NORMAL, var question:Question = Question.NAME) {
 
-    fun askQuestion(): String = when(question) {
-        Question.NAME -> Question.NAME.question
-        Question.PROFESSION -> Question.PROFESSION.question
-        Question.MATERIAL -> Question.MATERIAL.question
-        Question.BDAY -> Question.BDAY.question
-        Question.SERIAL -> Question.SERIAL.question
-        Question.IDLE -> Question.IDLE.question
-    }
+    fun askQuestion(): String = question.question
 
     fun listenAnswer(answer:String): Pair<String, Triple<Int, Int, Int>> {
         return if (question.answers.contains(answer)) {
             question = question.nextQuestion()
-            "Отлично - это правильный ответ\n${question.question}" to status.color
+            "Отлично - ты справился\n${question.question}" to status.color
         }
-        else {
-            status = status.nextStatus()
-            "Это не правильный ответ\n${question.question}" to status.color
+        else
+        {
+            if (status == Status.CRITICAL) {
+                resetStates()
+                "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
+            } else {
+                status = status.nextStatus()
+                "Это не правильный ответ\n${question.question}" to status.color
+            }
         }
+    }
+
+    private fun resetStates() {
+        status = Status.NORMAL
+        question = Question.NAME
     }
 
     enum class Status(val color:Triple<Int, Int, Int>) {

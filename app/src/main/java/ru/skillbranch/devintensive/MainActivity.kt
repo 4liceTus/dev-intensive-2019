@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.skillbranch.devintensive.models.Bender
+import ru.skillbranch.devintensive.extensions.hideKeyboard
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -65,7 +66,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun actionDone(editText: EditText) {
         editText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) sendBtn.performClick()
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                sendBtn.performClick()
+                hideKeyboard()
+                true
+            }
             else false
         }
     }

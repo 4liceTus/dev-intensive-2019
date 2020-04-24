@@ -21,7 +21,7 @@ class Bender(var status: Status = Status.NORMAL, var question:Question = Questio
     private fun checkAnswer(answer:String):String {
         if(!question.validate(answer)) return "${sendError()}"
 
-        return if (question.answers.contains(answer)) {
+        return if (question.answers.contains(answer.toLowerCase())) {
             question = question.nextQuestion()
             "Отлично - ты справился"
         }

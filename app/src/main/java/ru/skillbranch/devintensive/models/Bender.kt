@@ -7,7 +7,10 @@ class Bender(var status: Status = Status.NORMAL, var question:Question = Questio
     fun askQuestion(): String = question.question
 
     fun listenAnswer(answer:String): Pair<String, Triple<Int, Int, Int>> {
-        return "${checkAnswer(answer)}\n${question.question}" to status.color
+        return when(question) {
+            Question.IDLE -> question.question to status.color
+            else -> "${checkAnswer(answer)}\n${question.question}" to status.color
+        }
     }
 
     private fun resetStates() {
@@ -41,7 +44,7 @@ class Bender(var status: Status = Status.NORMAL, var question:Question = Questio
             Question.MATERIAL -> "Материал не должен содержать цифр"
             Question.BDAY -> "Год моего рождения должен содержать только цифры"
             Question.SERIAL -> "Серийный номер содержит только цифры, и их 7"
-            else -> ""
+            else -> "На этом все, вопросов больше нет"
         }
     }
 

@@ -41,7 +41,7 @@ class Bender(var status: Status = Status.NORMAL, var question:Question = Questio
             Question.MATERIAL -> "Материал не должен содержать цифр"
             Question.BDAY -> "Год моего рождения должен содержать только цифры"
             Question.SERIAL -> "Серийный номер содержит только цифры, и их 7"
-            else -> "На этом все, вопросов больше нет"
+            else -> ""
         }
     }
 

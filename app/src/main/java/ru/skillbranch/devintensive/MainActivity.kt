@@ -13,6 +13,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.skillbranch.devintensive.models.Bender
 import ru.skillbranch.devintensive.extensions.hideKeyboard
+import ru.skillbranch.devintensive.extensions.isKeyboardOpen
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,14 +43,15 @@ class MainActivity : AppCompatActivity() {
         textTxt.text = benderObj.askQuestion()
 
         sendBtn.setOnClickListener {
+            if(this.isKeyboardOpen()) {
+                this.hideKeyboard()
+            }
             sendAnswer()
-            //hideKeyboard()
         }
 
         messageEt.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                sendAnswer()
-                hideKeyboard()
+                sendBtn.performClick()
                 true
             }
             else false

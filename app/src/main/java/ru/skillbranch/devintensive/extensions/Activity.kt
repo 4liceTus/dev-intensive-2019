@@ -19,7 +19,7 @@ fun Activity.isKeyboardOpen(): Boolean {
     window.decorView.getWindowVisibleDisplayFrame(rect)
     val heightRoot = window.decorView.rootView.height
     val heightRect = rect.height()
-    return (heightRoot - heightRect > 0)
+    return (heightRoot - heightRect > 128)
 }
 
 fun Activity.isKeyboardClosed(): Boolean {

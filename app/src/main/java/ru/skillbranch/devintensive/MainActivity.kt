@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         sendBtn.setOnClickListener {
             sendAnswer()
-            hideKeyboard()
+            //hideKeyboard()
         }
 
         messageEt.setOnEditorActionListener { _, actionId, _ ->

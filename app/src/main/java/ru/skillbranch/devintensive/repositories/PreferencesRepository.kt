@@ -59,5 +59,7 @@ object PreferencesRepository {
             is Float -> putFloat(key, value)
             else -> error("Only primitives types can be stared in Shared Preferences")
         }
+
+        apply()
     }
 }

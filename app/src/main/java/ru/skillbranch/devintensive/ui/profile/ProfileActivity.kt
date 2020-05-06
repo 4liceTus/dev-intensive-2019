@@ -58,7 +58,7 @@ class ProfileActivity : AppCompatActivity() {
                 v.text = it[k].toString()
             }
         }
-        updateAvatar(profile)
+        //updateAvatar(profile)
     }
 
     private fun initViews(savedInstanceState: Bundle?) {

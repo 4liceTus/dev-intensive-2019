@@ -1,11 +1,12 @@
 package ru.skillbranch.devintensive.ui.profile
 
-import android.graphics.ColorFilter
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
+import android.annotation.SuppressLint
+import android.content.res.Resources
+import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -14,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.ui.custom.TextImageBuilder
 import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
@@ -58,7 +60,7 @@ class ProfileActivity : AppCompatActivity() {
                 v.text = it[k].toString()
             }
         }
-        //updateAvatar(profile)
+        updateAvatar(profile)
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
@@ -103,7 +105,7 @@ class ProfileActivity : AppCompatActivity() {
         with(btn_edit) {
             val filter: ColorFilter? = if(isEdit) {
                 PorterDuffColorFilter(
-                    resources.getColor(R.color.color_accent, theme),
+                    getColorFromTheme(R.attr.colorAccent, theme),
                     PorterDuff.Mode.SRC_IN
                 )
             }
@@ -120,6 +122,12 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun getColorFromTheme(resID: Int, theme: Resources.Theme): Int {
+        val color = TypedValue()
+        theme.resolveAttribute(resID, color, true)
+        return color.data
+    }
+
     private fun saveProfileData() {
         Profile(
             firstName = et_first_name.text.toString(),
@@ -133,12 +141,20 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun updateAvatar(profile: Profile) {
         Utils.toInitials(profile.firstName, profile.lastName)?.let {
-
+                val avatar = genAvatar(it)
+                iv_avatar.setImageBitmap(avatar)
         } ?: iv_avatar.setImageResource(R.drawable.avatar_default)
+    }
+
+    private fun genAvatar(text: String):Bitmap {
+        val color = getColorFromTheme(R.attr.colorAccent, theme)
+        return TextImageBuilder(iv_avatar.layoutParams.width, iv_avatar.layoutParams.height)
+            .setBackgroundColor(color)
+            .setText(text)
+            .setTextSize(72)
+            .build()
     }
 }
 
-    private fun genAvatar(text: String) {
 
-    }
 

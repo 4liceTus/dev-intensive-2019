@@ -1,11 +1,11 @@
 package ru.skillbranch.devintensive.ui.profile
 
-import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.View
 import android.widget.EditText
@@ -23,10 +23,12 @@ class ProfileActivity : AppCompatActivity() {
 
     companion object {
         const val IS_EDIT_MODE = "IS_EDIT_MODE"
+        const val IS_ERROR_REPOSITORY = "IS_ERROR_REPOSITORY"
     }
 
     private lateinit var viewModel: ProfileViewModel
     var isEditMode = false
+    var isErrorRepository = false
     lateinit var viewFields: Map<String, TextView>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,12 +37,12 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
         initViews(savedInstanceState)
         initViewModel()
-        Log.d("M_ProfileActivity", "onCreate")
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putBoolean(IS_EDIT_MODE, isEditMode)
+        outState?.putBoolean(IS_ERROR_REPOSITORY, isErrorRepository)
     }
 
     private fun initViewModel() {
@@ -50,7 +52,6 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun updateTheme(mode: Int) {
-        Log.d("M_ProfileActivity", "updateTheme")
         delegate.setLocalNightMode(mode)
     }
 
@@ -76,10 +77,17 @@ class ProfileActivity : AppCompatActivity() {
         )
 
         isEditMode = savedInstanceState?.getBoolean(IS_EDIT_MODE, false) ?: false
+        isErrorRepository = savedInstanceState?.getBoolean(IS_ERROR_REPOSITORY, false) ?: false
         showCurrentMode(isEditMode)
 
         btn_edit.setOnClickListener {
-            if(isEditMode) saveProfileData()
+            if(isEditMode) {
+                if(isErrorRepository) {
+                    et_repository.text.clear()
+                    isErrorRepository = false
+                }
+                saveProfileData()
+            }
             isEditMode = !isEditMode
             showCurrentMode(isEditMode)
         }
@@ -87,6 +95,23 @@ class ProfileActivity : AppCompatActivity() {
         btn_switch_theme.setOnClickListener {
             viewModel.switchTheme()
         }
+
+        et_repository.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+            override fun afterTextChanged(s: Editable?) {
+                if(isValidRepository(s.toString())) {
+                    hideErrorRepository()
+                    isErrorRepository = false
+                }
+                else {
+                    showErrorRepository()
+                    isErrorRepository = true
+                }
+            }
+        } )
     }
 
     private fun showCurrentMode(isEdit: Boolean) {
@@ -153,6 +178,27 @@ class ProfileActivity : AppCompatActivity() {
             .setText(text)
             .setTextSize(72)
             .build()
+    }
+
+    private fun showErrorRepository() {
+        wr_repository.error = getString(R.string.repository_error_message)
+    }
+
+    private fun hideErrorRepository() {
+        wr_repository.error = ""
+    }
+
+    private fun isValidRepository(string: String):Boolean {
+        if(string.isEmpty()) return true
+
+        val exceptions = arrayOf(
+            "enterprise", "features", "topics", "collections", "trending", "events", "marketplace", "pricing",
+            "nonprofit", "customer-stories", "security", "login", "join"
+        )
+        val strExceptions = exceptions.joinToString("|")
+        val regex = Regex("^(https://)?(www.)?(github.com/)(?!(${strExceptions})(?=/|$))(?![\\W])(?!\\w+[-]{2})[a-zA-Z0-9-]+(?<![-])(/)?$")
+
+        return regex.matches(string)
     }
 }
 

@@ -262,7 +262,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/spacing_normal_16"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            app:errorEnabled="true">
 
             <EditText
                 style="@style/Profile.EditText.Single"

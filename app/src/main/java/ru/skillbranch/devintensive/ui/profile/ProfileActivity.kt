@@ -14,6 +14,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
+import ru.skillbranch.devintensive.extensions.hideKeyboard
+import ru.skillbranch.devintensive.extensions.isKeyboardOpen
 import ru.skillbranch.devintensive.models.Profile
 import ru.skillbranch.devintensive.ui.custom.TextImageBuilder
 import ru.skillbranch.devintensive.utils.Utils
@@ -89,6 +91,7 @@ class ProfileActivity : AppCompatActivity() {
         showCurrentMode(isEditMode)
 
         btn_edit.setOnClickListener {
+            if(isKeyboardOpen()) hideKeyboard()
             if(isEditMode) saveProfileData()
             isEditMode = !isEditMode
             showCurrentMode(isEditMode)
@@ -102,9 +105,10 @@ class ProfileActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.validationRepository(s.toString())
             }
             override fun afterTextChanged(s: Editable?) {
-                viewModel.validationRepository(s.toString())
+                if(isKeyboardOpen()) hideKeyboard()
             }
         } )
     }

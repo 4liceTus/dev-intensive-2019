@@ -108,7 +108,7 @@ class ProfileActivity : AppCompatActivity() {
                 viewModel.validationRepository(s.toString())
             }
             override fun afterTextChanged(s: Editable?) {
-                if(isKeyboardOpen()) hideKeyboard()
+                //if(isKeyboardOpen()) hideKeyboard()
             }
         } )
     }

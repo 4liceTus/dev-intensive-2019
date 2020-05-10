@@ -30,6 +30,7 @@ class ProfileViewModel: ViewModel() {
 
     fun saveProfileData(profile: Profile) {
         val profileForSave = if(!isRepositotyValid.value!!) profile.copy(repository = "") else profile
+        isRepositotyValid.value = true
         repository.saveProfile(profileForSave)
         profileData.value = profileForSave
     }

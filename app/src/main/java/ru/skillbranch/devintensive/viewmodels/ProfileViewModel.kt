@@ -55,7 +55,7 @@ class ProfileViewModel: ViewModel() {
                 "nonprofit", "customer-stories", "security", "login", "join"
             )
             val strExceptions = exceptions.joinToString("|")
-            val regex = Regex("^(https://)?(www.)?(github.com/)(?!(${strExceptions})(?=/|$))(?![\\W])(?!\\w+[-]{2})[a-zA-Z0-9-]+(?<![-])(/)?$")
+            val regex = Regex("^(https://)?(www\\.)?(github\\.com/)(?!(${strExceptions})(?=/|$))(?![\\W])(?!\\w+[-]{2})[a-zA-Z0-9-]+(?<![-])(/)?$")
 
             isRepositotyValid.value = regex.matches(string)
         }

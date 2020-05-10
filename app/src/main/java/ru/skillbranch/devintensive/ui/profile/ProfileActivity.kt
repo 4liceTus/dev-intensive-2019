@@ -181,11 +181,13 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun showErrorRepository() {
+        wr_repository.isErrorEnabled = true
         wr_repository.error = getString(R.string.repository_error_message)
     }
 
     private fun hideErrorRepository() {
-        wr_repository.error = ""
+        wr_repository.isErrorEnabled = false
+        wr_repository.error = null
     }
 
     private fun isValidRepository(string: String):Boolean {

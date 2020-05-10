@@ -23,12 +23,10 @@ class ProfileActivity : AppCompatActivity() {
 
     companion object {
         const val IS_EDIT_MODE = "IS_EDIT_MODE"
-        const val IS_ERROR_REPOSITORY = "IS_ERROR_REPOSITORY"
     }
 
     private lateinit var viewModel: ProfileViewModel
     var isEditMode = false
-    var isErrorRepository = false
     lateinit var viewFields: Map<String, TextView>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,13 +40,13 @@ class ProfileActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putBoolean(IS_EDIT_MODE, isEditMode)
-        outState?.putBoolean(IS_ERROR_REPOSITORY, isErrorRepository)
     }
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         viewModel.getProfileData().observe(this, Observer { updateUI(it) })
         viewModel.getTheme().observe(this, Observer { updateTheme(it) })
+        viewModel.getIsRepositoryValid().observe(this, Observer { updateRepository(it) })
     }
 
     private fun updateTheme(mode: Int) {
@@ -64,6 +62,17 @@ class ProfileActivity : AppCompatActivity() {
         updateAvatar(profile)
     }
 
+    private fun updateRepository(isValid: Boolean) {
+        if(isValid) {
+            wr_repository.isErrorEnabled = false
+            wr_repository.error = null
+        }
+        else {
+            wr_repository.isErrorEnabled = true
+            wr_repository.error = getString(R.string.repository_error_message)
+        }
+    }
+
     private fun initViews(savedInstanceState: Bundle?) {
         viewFields = mapOf(
             "nickName" to tv_nick_name,
@@ -77,17 +86,10 @@ class ProfileActivity : AppCompatActivity() {
         )
 
         isEditMode = savedInstanceState?.getBoolean(IS_EDIT_MODE, false) ?: false
-        isErrorRepository = savedInstanceState?.getBoolean(IS_ERROR_REPOSITORY, false) ?: false
         showCurrentMode(isEditMode)
 
         btn_edit.setOnClickListener {
-            if(isEditMode) {
-                if(isErrorRepository) {
-                    et_repository.text.clear()
-                    isErrorRepository = false
-                }
-                saveProfileData()
-            }
+            if(isEditMode) saveProfileData()
             isEditMode = !isEditMode
             showCurrentMode(isEditMode)
         }
@@ -102,14 +104,7 @@ class ProfileActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
             override fun afterTextChanged(s: Editable?) {
-                if(isValidRepository(s.toString())) {
-                    hideErrorRepository()
-                    isErrorRepository = false
-                }
-                else {
-                    showErrorRepository()
-                    isErrorRepository = true
-                }
+                viewModel.validationRepository(s.toString())
             }
         } )
     }
@@ -178,29 +173,6 @@ class ProfileActivity : AppCompatActivity() {
             .setText(text)
             .setTextSize(72)
             .build()
-    }
-
-    private fun showErrorRepository() {
-        wr_repository.isErrorEnabled = true
-        wr_repository.error = getString(R.string.repository_error_message)
-    }
-
-    private fun hideErrorRepository() {
-        wr_repository.isErrorEnabled = false
-        wr_repository.error = null
-    }
-
-    private fun isValidRepository(string: String):Boolean {
-        if(string.isEmpty()) return true
-
-        val exceptions = arrayOf(
-            "enterprise", "features", "topics", "collections", "trending", "events", "marketplace", "pricing",
-            "nonprofit", "customer-stories", "security", "login", "join"
-        )
-        val strExceptions = exceptions.joinToString("|")
-        val regex = Regex("^(https://)?(www.)?(github.com/)(?!(${strExceptions})(?=/|$))(?![\\W])(?!\\w+[-]{2})[a-zA-Z0-9-]+(?<![-])(/)?$")
-
-        return regex.matches(string)
     }
 }
 

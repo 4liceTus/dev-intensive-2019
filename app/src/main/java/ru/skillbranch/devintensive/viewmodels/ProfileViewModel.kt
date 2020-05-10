@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.viewmodels
 
+import android.text.BoringLayout
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
@@ -13,25 +14,24 @@ class ProfileViewModel: ViewModel() {
     private var repository: PreferencesRepository = PreferencesRepository
     private val profileData = MutableLiveData<Profile>()
     private val appTheme = MutableLiveData<Int>()
+    private val isRepositotyValid = MutableLiveData<Boolean>()
 
     init {
-        Log.d("M_ProfileViewModel", "init view model")
         profileData.value = repository.getProfile()
         appTheme.value = repository.getAppTheme()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.d("M_ProfileViewModel", "view model cleared")
+        isRepositotyValid.value = true
     }
 
     fun getProfileData(): LiveData<Profile> = profileData
 
     fun getTheme(): LiveData<Int> = appTheme
 
+    fun getIsRepositoryValid(): LiveData<Boolean> = isRepositotyValid
+
     fun saveProfileData(profile: Profile) {
-        repository.saveProfile(profile)
-        profileData.value = profile
+        val profileForSave = if(!isRepositotyValid.value!!) profile.copy(repository = "") else profile
+        repository.saveProfile(profileForSave)
+        profileData.value = profileForSave
     }
 
     fun switchTheme() {
@@ -42,5 +42,21 @@ class ProfileViewModel: ViewModel() {
             appTheme.value = AppCompatDelegate.MODE_NIGHT_YES
         }
         repository.saveAppTheme(appTheme.value!!)
+    }
+
+    fun validationRepository(string: String) {
+        if(string.isEmpty()) {
+            isRepositotyValid.value = true
+        }
+        else {
+            val exceptions = arrayOf(
+                "enterprise", "features", "topics", "collections", "trending", "events", "marketplace", "pricing",
+                "nonprofit", "customer-stories", "security", "login", "join"
+            )
+            val strExceptions = exceptions.joinToString("|")
+            val regex = Regex("^(https://)?(www.)?(github.com/)(?!(${strExceptions})(?=/|$))(?![\\W])(?!\\w+[-]{2})[a-zA-Z0-9-]+(?<![-])(/)?$")
+
+            isRepositotyValid.value = regex.matches(string)
+        }
     }
 }

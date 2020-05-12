@@ -23,6 +23,11 @@ class ChatAdapter: RecyclerView.Adapter<ChatAdapter.SingleViewHolder>() {
         holder.bind(items[position])
     }
 
+    fun updateData(data: List<ChatItem>) {
+        items = data
+        notifyDataSetChanged()
+    }
+
     inner class SingleViewHolder(convertView: View): RecyclerView.ViewHolder(convertView), LayoutContainer {
         override val containerView: View?
             get() = itemView

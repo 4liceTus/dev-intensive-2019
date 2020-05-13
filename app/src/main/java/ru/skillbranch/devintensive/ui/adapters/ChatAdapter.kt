@@ -52,7 +52,7 @@ class ChatAdapter: RecyclerView.Adapter<ChatAdapter.SingleViewHolder>() {
                 text = item.messageCount.toString()
             }
 
-            tv_title_single.text = item.shortDescription
+            tv_title_single.text = item.title
             tv_message_single.text = item.shortDescription
         }
     }

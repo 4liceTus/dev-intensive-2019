@@ -31,6 +31,18 @@ fun Date.humanizeDiff(date: Date = Date()): String {
     }
 }
 
+fun Date.shortFormat(): String? {
+    val pattern = if(this.isSameDay(Date())) "HH:mm" else "dd.MM.yy"
+    val dateFormat = SimpleDateFormat(pattern, Locale("ru"))
+    return dateFormat.format(this)
+}
+
+fun Date.isSameDay(date: Date): Boolean {
+    val day1 = this.time / TimeUnits.DAY.value
+    val day2 = date.time / TimeUnits.DAY.value
+    return  day1 == day2
+}
+
 fun getPeriodForm(interval: String, isPast: Boolean): String {
     val prefix = if (isPast) "" else "через"
     val postfix = if (isPast) "назад" else ""

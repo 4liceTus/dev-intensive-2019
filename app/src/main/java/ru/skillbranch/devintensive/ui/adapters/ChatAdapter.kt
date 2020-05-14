@@ -3,14 +3,16 @@ package ru.skillbranch.devintensive.ui.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_chat_single.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.ChatItem
 
-class ChatAdapter: RecyclerView.Adapter<ChatAdapter.SingleViewHolder>() {
+class ChatAdapter(val listener: (ChatItem) -> Unit): RecyclerView.Adapter<ChatAdapter.SingleViewHolder>() {
     var items: List<ChatItem> = listOf()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SingleViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val convertView = inflater.inflate(R.layout.item_chat_single, parent, false)
@@ -20,19 +22,31 @@ class ChatAdapter: RecyclerView.Adapter<ChatAdapter.SingleViewHolder>() {
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: SingleViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(items[position], listener)
     }
 
     fun updateData(data: List<ChatItem>) {
+        val diffCallback = object : DiffUtil.Callback() {
+            override fun areItemsTheSame(oldPos: Int, newPos: Int): Boolean = items[oldPos].id == data[newPos].id
+
+            override fun areContentsTheSame(oldIPos: Int, newPos: Int): Boolean = items[oldIPos].hashCode() == data[newPos].hashCode()
+
+            override fun getOldListSize(): Int = items.size
+
+            override fun getNewListSize(): Int = data.size
+        }
+
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
         items = data
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     inner class SingleViewHolder(convertView: View): RecyclerView.ViewHolder(convertView), LayoutContainer {
         override val containerView: View?
             get() = itemView
 
-        fun bind(item: ChatItem) {
+        fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
             if(item.avatar == null) {
                 iv_avatar_single.setInitials(item.initials)
             }
@@ -54,6 +68,10 @@ class ChatAdapter: RecyclerView.Adapter<ChatAdapter.SingleViewHolder>() {
 
             tv_title_single.text = item.title
             tv_message_single.text = item.shortDescription
+
+            itemView.setOnClickListener {
+                listener.invoke(item)
+            }
         }
     }
 }

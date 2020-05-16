@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.ui.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,7 +43,7 @@ class ChatAdapter(val listener: (ChatItem) -> Unit): RecyclerView.Adapter<ChatAd
         diffResult.dispatchUpdatesTo(this)
     }
 
-    inner class SingleViewHolder(convertView: View): RecyclerView.ViewHolder(convertView), LayoutContainer {
+    inner class SingleViewHolder(convertView: View): RecyclerView.ViewHolder(convertView), LayoutContainer, ItemTouchViewHolder {
         override val containerView: View?
             get() = itemView
 
@@ -72,6 +73,14 @@ class ChatAdapter(val listener: (ChatItem) -> Unit): RecyclerView.Adapter<ChatAd
             itemView.setOnClickListener {
                 listener.invoke(item)
             }
+        }
+
+        override fun onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY)
+        }
+
+        override fun onItemCleared() {
+            itemView.setBackgroundColor(Color.WHITE)
         }
     }
 }

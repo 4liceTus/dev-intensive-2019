@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener {
-            viewModel.addItems()
+
         }
     }
 

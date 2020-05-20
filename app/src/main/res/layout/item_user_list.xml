@@ -24,7 +24,7 @@
         android:layout_toRightOf="@id/iv_selected"/>
 
     <View
-        android:id="@+id/indicator"
+        android:id="@+id/sv_indicator"
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:background="@drawable/bg_indicator"

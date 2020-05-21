@@ -18,9 +18,16 @@ class GroupViewModel: ViewModel() {
 
     fun getSelectedData(): LiveData<List<UserItem>> = selectedItems
 
-    fun handleSelectedItem(userID: String) {
+    fun handleSelectedItem(userId: String) {
         userItems.value = userItems.value!!.map {
-            if(it.id == userID) it.copy(isSelected = !it.isSelected)
+            if(it.id == userId) it.copy(isSelected = !it.isSelected)
+            else it
+        }
+    }
+
+    fun handleRemoveChip(userId: String) {
+        userItems.value = userItems.value!!.map {
+            if(it.id == userId) it.copy(isSelected = false)
             else it
         }
     }

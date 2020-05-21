@@ -32,5 +32,9 @@ class GroupViewModel: ViewModel() {
         }
     }
 
+    fun handleSearchQuery(query: String?) {
+
+    }
+
     private fun loadUsers(): List<UserItem> = groupRepository.loadUsers().map {it.toUserItem()}
 }

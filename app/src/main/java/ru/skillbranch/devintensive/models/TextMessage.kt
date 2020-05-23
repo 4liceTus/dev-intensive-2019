@@ -7,7 +7,7 @@ import java.util.*
 
 class TextMessage(
     id: String,
-    from: User?,
+    from: User,
     chat: Chat,
     isIncoming: Boolean = false,
     date : Date = Date(),
@@ -16,6 +16,6 @@ class TextMessage(
 
 ): BaseMessage(id, from, chat, isIncoming, date, isReaded) {
 
-    override fun formatMessage(): String = "id:$id ${from?.firstName} " +
+    override fun formatMessage(): String = "id:$id ${from.firstName} " +
             "${if (isIncoming) "получил" else "отправил"} сообщение \"$text\" ${date.humanizeDiff()}"
 }

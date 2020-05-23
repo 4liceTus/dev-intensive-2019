@@ -37,11 +37,18 @@ class MainActivity : AppCompatActivity() {
         chatAdapter = ChatAdapter {
             Snackbar.make(rv_chat_list, "Click on ${it.title}", Snackbar.LENGTH_LONG).show()
         }
+
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+
         val touchCallback = ChatItemTouchHelperCallback(chatAdapter) {
-            viewModel.addToArchive(it.id)
-            Snackbar.make(rv_chat_list, "Вы точно хотите добавить ${it.title} в архив?", Snackbar.LENGTH_LONG).show()
+            val id = it.id
+            viewModel.addToArchive(id)
+            Snackbar.make(rv_chat_list, "Вы точно хотите добавить ${it.title} в архив?", Snackbar.LENGTH_LONG)
+                .setAction("ОТМЕНА") { viewModel.restoreFromArchive(id) }
+                .show()
+
         }
+
         val touchHelper = ItemTouchHelper(touchCallback)
         touchHelper.attachToRecyclerView(rv_chat_list)
 

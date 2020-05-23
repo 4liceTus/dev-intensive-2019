@@ -14,14 +14,14 @@
         android:layout_alignParentLeft="true">
     </ru.skillbranch.devintensive.ui.custom.AvatarImageView>
 
-    <TextView
+    <View
         android:id="@+id/sv_indicator"
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:background="@drawable/bg_indicator"
         android:layout_toLeftOf="@id/tv_title_single"
         android:layout_alignParentBottom="true">
-    </TextView>
+    </View>
 
     <TextView
         android:id="@+id/tv_title_single"

@@ -5,13 +5,12 @@ import ru.skillbranch.devintensive.extensions.TimeUnits
 import ru.skillbranch.devintensive.extensions.add
 import ru.skillbranch.devintensive.models.BaseMessage
 import ru.skillbranch.devintensive.models.TextMessage
-import ru.skillbranch.devintensive.models.data.User
 import ru.skillbranch.devintensive.models.data.Chat
+import ru.skillbranch.devintensive.models.data.User
 import java.util.*
 import kotlin.random.Random
 
 object DataGenerator {
-
     private val maleNames = listOf(
         "Robin",
         "James",
@@ -115,7 +114,6 @@ object DataGenerator {
         "Jimmy",
         "Antonio"
     )
-
     private val femaleNames = listOf(
         "Mary",
         "Patricia",
@@ -217,7 +215,6 @@ object DataGenerator {
         "Lillian",
         "Emily"
     )
-
     private val lastNames = listOf(
         "Smith",
         "Johnson",
@@ -320,7 +317,6 @@ object DataGenerator {
         "Diaz",
         "Hayes"
     )
-
     private val maleAvatars = listOf(
         "https://skill-branch.ru/resources/dev-intensive-2019/avatars/man0.png",
         "https://skill-branch.ru/resources/dev-intensive-2019/avatars/man1.png",
@@ -333,7 +329,6 @@ object DataGenerator {
         "https://skill-branch.ru/resources/dev-intensive-2019/avatars/man8.png",
         "https://skill-branch.ru/resources/dev-intensive-2019/avatars/man9.png"
     )
-
     private val femaleAvatars = listOf(
         "https://skill-branch.ru/resources/dev-intensive-2019/avatars/woman0.png",
         "https://skill-branch.ru/resources/dev-intensive-2019/avatars/woman1.png",
@@ -451,7 +446,7 @@ object DataGenerator {
                     chat,
                     true,
                     user.lastVisit ?: Date(),
-                    true,
+                    false,
                     randomTextPayload()
                 )
             )

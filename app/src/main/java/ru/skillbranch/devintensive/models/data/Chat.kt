@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.models.data
 
+import androidx.annotation.VisibleForTesting
 import ru.skillbranch.devintensive.extensions.shortFormat
 import ru.skillbranch.devintensive.models.BaseMessage
 import ru.skillbranch.devintensive.models.ImageMessage
@@ -15,11 +16,14 @@ data class Chat (
     var isArchived: Boolean = false
 ) {
 
-    private fun unreadableMessageCount(): Int = messages.filter { !it.isReaded }.size
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun unreadableMessageCount(): Int = messages.filter { !it.isReaded }.size
 
-    private fun lastMessageDate(): Date? = messages.lastOrNull()?.date
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun lastMessageDate(): Date? = messages.lastOrNull()?.date
 
-    private fun lastMessageShort(): Pair<String, String> = when(val lastMessage = messages.lastOrNull()) {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun lastMessageShort(): Pair<String, String> = when(val lastMessage = messages.lastOrNull()) {
         is TextMessage -> (lastMessage.text ?: "") to "${lastMessage.from.firstName}"
         is ImageMessage -> "${lastMessage.from.firstName} - отправил фото" to "${lastMessage.from.firstName}"
         else -> "Сообщений еще нет" to ""

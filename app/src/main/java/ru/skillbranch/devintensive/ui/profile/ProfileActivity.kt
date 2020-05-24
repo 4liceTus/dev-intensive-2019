@@ -2,6 +2,7 @@ package ru.skillbranch.devintensive.ui.profile
 
 import android.content.res.Resources
 import android.graphics.*
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -164,10 +165,24 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun updateAvatar(profile: Profile) {
+        /*
         Utils.toInitials(profile.firstName, profile.lastName)?.let {
                 val avatar = genAvatar(it)
                 iv_avatar.setImageBitmap(avatar)
         } ?: iv_avatar.setImageResource(R.drawable.avatar_default)
+        */
+
+        val initials = Utils.toInitials(profile?.firstName, profile?.lastName)
+        val drawable = if (initials==null) {
+            resources.getDrawable(R.drawable.ic_avatar, theme)
+        } else {
+            val color = TypedValue()
+            theme.resolveAttribute(R.attr.colorAccent, color, true)
+            ColorDrawable(color.data)
+        }
+
+        iv_avatar.setImageDrawable(drawable)
+        iv_avatar.setText(initials)
     }
 
     private fun genAvatar(text: String):Bitmap {

@@ -18,7 +18,6 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.hideKeyboard
 import ru.skillbranch.devintensive.extensions.isKeyboardOpen
 import ru.skillbranch.devintensive.models.Profile
-import ru.skillbranch.devintensive.ui.custom.TextImageBuilder
 import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
@@ -185,6 +184,7 @@ class ProfileActivity : AppCompatActivity() {
         iv_avatar.setText(initials)
     }
 
+    /*
     private fun genAvatar(text: String):Bitmap {
         val color = getColorFromTheme(R.attr.colorAccent, theme)
         return TextImageBuilder(iv_avatar.layoutParams.width, iv_avatar.layoutParams.height)
@@ -193,6 +193,7 @@ class ProfileActivity : AppCompatActivity() {
             .setTextSize(72)
             .build()
     }
+    */
 }
 
 
